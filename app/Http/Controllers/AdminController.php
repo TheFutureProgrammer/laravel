@@ -7,66 +7,72 @@ use App\Models\Enrollment;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use ConsoleTVs\Charts\Facades\Charts;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+    public function admin()
+    {
+       
+        $labelsData = DB::table('departments')->select('name')->get();
+        $labels = $labelsData->pluck('name'); // Assuming 'column1' is the label
+
+        $valuesData = DB::table('enrollments')->pluck('id'); // Assuming 'column3' is the value
+
+
+           return view('admin', [
+        'labels' => $labels,
+        'values' => $valuesData,
+    ]);
+    }
     public function students()
     {
-        $totalStudents = Student::count();
-        $totalDepartments = Department::count();
-        $totalEnrollments = Enrollment::count();
-
-        // Create a chart to visualize data
-        $studentsChart = Charts::create('bar', 'highcharts')
-            ->title('Total Students')
-            ->elementLabel('Total')
-            ->labels(['Students'])
-            ->values([$totalStudents]);
-
-        // You can create more charts for other metrics
-
-        return view('students', compact('totalStudents', 'totalDepartments', 'totalEnrollments', 'studentsChart'));
+        
+        return view('students');
     }
 
-    // public function createStudent()
-    // {
-    //     return view('admin.students.create');
-    // }
 
-    // public function storeStudent(Request $request)
-    // {
-    //     $request->validate([
-    //         'name' => 'required',
-    //         'email' => 'required|email|unique:students',
-    //         // Add more validation rules as needed
-    //     ]);
 
-    //     Student::create($request->all());
+    public function createStudent()
+    {
+        return view('admin.students.create');
+    }
 
-    //     return redirect()->route('admin.students')->with('success', 'Student added successfully');
-    // }
+    public function storeStudent(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:students',
+            // Add more validation rules as needed
+        ]);
 
-    // public function editStudent(Student $student)
-    // {
-    //     return view('admin.students.edit', compact('student'));
-    // }
+        Student::create($request->all());
 
-    // public function updateStudent(Request $request, Student $student)
-    // {
-    //     $request->validate([
-    //         'name' => 'required',
-    //         'email' => 'required|email|unique:students,email,' . $student->id,
-    //         // Add more validation rules as needed
-    //     ]);
+        return redirect()->route('admin.students')->with('success', 'Student added successfully');
+    }
 
-    //     $student->update($request->all());
+    public function editStudent(Student $student)
+    {
+        return view('admin.students.edit', compact('student'));
+    }
 
-    //     return redirect()->route('admin.students')->with('success', 'Student updated successfully');
-    // }
+    public function updateStudent(Request $request, Student $student)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:students,email,' . $student->id,
+            // Add more validation rules as needed
+        ]);
 
-    // public function deleteStudent(Student $student)
-    // {
-    //     $student->delete();
-    //     return redirect()->route('admin.students')->with('success', 'Student deleted successfully');
-    // }
+        $student->update($request->all());
+
+        return redirect()->route('admin.students')->with('success', 'Student updated successfully');
+    }
+
+    public function deleteStudent(Student $student)
+    {
+        $student->delete();
+        return redirect()->route('admin.students')->with('success', 'Student deleted successfully');
+    }
+
 }

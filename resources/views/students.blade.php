@@ -1,7 +1,9 @@
-@extends('layouts.admin')
+@extends('layouts.app')
+
+@section('title', 'Students')
 
 @section('content')
-    <!-- Add your section content here -->
-    <h3>Students</h3>
-    <p>List of all students</p>
+    <!-- Your specific content for the students page goes here -->
+    <h1>Students Page</h1>
+    
 @endsection
