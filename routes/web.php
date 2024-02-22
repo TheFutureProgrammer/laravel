@@ -24,6 +24,6 @@ Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('
 Route::post('/register', [AuthController::class, 'register']);
 
 // display the admin dashboard
-Route::get('/students', [AdminController::class, 'students'])->name('students');    
+Route::get('/admin', [AdminController::class, 'admin'])->name('admin');    
 
-// display the user dashboard
+Route::get('/students', [AdminController::class, 'students'])->name('students');  
